@@ -1,0 +1,90 @@
+from selenium import webdriver
+from selenium.webdriver.support.select import Select
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
+import time
+from urllib import request
+import urllib.parse as urllib
+from urllib.parse import urlparse
+import random
+
+browser = webdriver.Chrome()
+browser.maximize_window()
+browser.get('https://dev.amazinghiring.com/users/registration/')
+
+first_name = browser.find_element_by_id('first_name')
+first_name.click()
+random_name = (''.join([random.choice(list('ячсмитьбюфывапролджэйцукенгшщзхъ')) for x in range(6)])) 
+first_name.send_keys(random_name)          #ввод случайного имени
+
+second_name = browser.find_element_by_xpath('//*[@id="last_name"]')
+second_name.click()
+random_name = (''.join([random.choice(list('ячсмитьбюфывапролджэйцукенгшщзхъ')) for x in range(10)])) #генерация случайной фамилии
+second_name.send_keys(random_name)
+
+phone = browser.find_element_by_id('phone')
+random_phone = (''.join([random.choice(list('1234567890')) for x in range(10)])) 
+eight = '8'
+full_random_phone = eight + random_phone
+phone.click()
+phone.send_keys(full_random_phone)         #ввод случайного номера, начинающегося с '8'
+
+email = browser.find_element_by_id('email')
+random_email = (''.join([random.choice(list('adjkbjgjbjtkljkljsbg1234567890')) for x in range(6)])) 
+mail = '@gmail.com'
+full_random_email = random_email + mail
+email.click()
+email.send_keys(full_random_email)         #ввод случайного email
+
+position = browser.find_element_by_xpath('//*[@id="app"]/div/div[3]/div[2]/div/div[2]/form/div[2]/div[5]/div[1]/div/select')
+position.click()
+Select(position).select_by_value('senior_recruiter')
+
+company = browser.find_element_by_id('company')
+random_company = (''.join([random.choice(list('abcd')) for x in range(10)])) 
+company.click()
+company.send_keys(random_company)          #ввод случайной компании
+
+job_openings = browser.find_element_by_id('job_openings')
+job_openings.click()
+random_job_openings = (''.join([random.choice(list('123456789')) for x in range(2)])) 
+job_openings.send_keys(random_job_openings) #ввод случайного количества сотрудников
+
+password = browser.find_element_by_xpath('//*[@id="password"]')
+random_password = (''.join([random.choice(list('123456789zxcvbnmasfghjkqwertyuiop[]/HF]//]]][[[!@#$%^&*()HKSJJCLAHAZQPL')) for x in range(12)])) 
+password.click()
+password.send_keys(random_password)         #ввод случайного пароля
+
+from python_rucaptcha import ReCaptchaV2
+# Введите ключ от сервиса RuCaptcha, из своего аккаунта
+RUCAPTCHA_KEY = "4018aa573469d028f7671f0d6b1f91c0"
+# G-ReCaptcha ключ сайта
+SITE_KEY = "6LdBohsTAAAAAJq6-t50dJXT-TXUNmazoHdM0CgW"
+# Ссылка на страницу с капчёй
+PAGE_URL = "https://dev.amazinghiring.com/users/registration/"
+# Возвращается JSON содержащий информацию для решения капчи
+user_answer = ReCaptchaV2.ReCaptchaV2(rucaptcha_key=RUCAPTCHA_KEY).captcha_handler(site_key=SITE_KEY,
+                                                                                   page_url=PAGE_URL)
+
+if not user_answer['error']:
+	# решение капчи
+	print(user_answer['captchaSolve'])
+	print(user_answer['taskId'])
+elif user_answer['error']:
+	# Тело ошибки, если есть
+	print(user_answer ['errorBody'])
+	print(user_answer ['errorBody'])
+
+password.send_keys(Keys.TAB)
+password.send_keys(Keys.TAB)
+password.send_keys(Keys.TAB)
+password.send_keys(Keys.ENTER)
+
+curent_url = browser.current_url
+succes_url = 'https://dev.amazinghiring.com/users/need-activation/'
+
+if curent_url == succes_url:
+    print('passed')                  #тест пройден
+else:
+    print('failed')                  #тест провален
